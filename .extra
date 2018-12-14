@@ -6,3 +6,83 @@ git config --global user.name "$GIT_AUTHOR_NAME"
 GIT_AUTHOR_EMAIL="jonathon@stardotbmp.com"
 GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
 git config --global user.email "$GIT_AUTHOR_EMAIL"
+
+### defaults write com.apple.finder QLEnableTextSelection -bool TRUE; killall Finder
+
+alias gd='cd /Volumes/GoogleDrive/'
+alias hdt='hidedesktop'
+alias sdt='showdesktop'
+alias hidedots='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
+alias showdots='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
+alias ebp='code ~/.bash_profile'
+alias rbp='source ~/.bashrc'
+alias extras='code -n ~/.extra'
+alias aliases='code -n ~/.aliases'
+alias projects='code -n ~/.projects'
+alias lsa='ls -la'
+alias github=GitHub
+alias fbserve='firebase serve --only functions,hosting'
+
+mkcd() { mkdir -p "$@" && cd "$_"; }
+
+if [ ! "~/Drive" ]; then
+	ln -s /Volumes/GoogleDrive/ ~/Drive
+fi
+
+function GitHub()
+{
+    if [ ! -d .git ] ;
+        then echo "ERROR: This isnt a git directory" && return false;
+    fi
+    git_url=`git config --get remote.origin.url`
+    if [[ $git_url != https://github* ]] ;
+        then echo "ERROR: Remote origin is invalid" && return false;
+    fi
+    url=${git_url%.git}
+    open $url
+}
+
+function bcfun {
+if [ -d "$1" ] ; then
+    echo "$PASSED is a directory";
+  for issue in "$1"/*/ ; do
+    file="$issue""markup.bcf"
+    title=`cat "$file" | xpath '//Title[1]/text()' 2>/dev/null | sed s/\<Title\>//g| sed s/\<\\\\/title\>//g`
+    # echo $title
+
+    image="$issue""snapshot.png"
+    #echo "$image"
+
+    mv "$image" "$1/$title.png"
+
+    rm -r "$issue"
+
+  done
+else
+	echo "No directory specified"
+fi
+}
+
+function cdl {
+	if [ "$1" = "-l" ]; then
+		\cd $2; ls
+	elif [ "$1" = "-la" ]; then
+		\cd $2; lsa
+	elif [ "$1" = "-L" ]; then
+		\cd -L $2
+	elif [ "$1" = "-La" ]; then
+		\cd -L $2; lsa
+	elif [ "$1" = "-P" ]; then
+		\cd -P $2
+	elif [ "$1" = "-Pa" ]; then
+		\cd -P $2; lsa
+	else
+		\cd $1
+	fi
+}
+
+### Google Apps Manager ###
+alias gam="python ~/Google\ Drive/Google\ Apps/gam/gam.py"
+
+export PATH=~/.npm-global/bin:$PATH
+npm config set prefix '~/.npm-global'
