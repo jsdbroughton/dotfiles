@@ -16,6 +16,8 @@ alias hidedots='defaults write com.apple.finder AppleShowAllFiles NO; killall Fi
 alias showdots='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
 alias ebp='code ~/.bash_profile'
 alias rbp='source ~/.bashrc'
+alias ebz='code ~/.z_profile'
+alias rbz='source ~/.zshrc'
 alias extras='code -n ~/.extra'
 alias aliases='code -n ~/.aliases'
 alias projects='code -n ~/.projects'
@@ -63,6 +65,22 @@ else
 fi
 }
 
+
+function grfn_mini {
+
+ sshpass -p Gingerprice1 ssh grfnadministrator@0.tcp.eu.ngrok.io -p $1
+}
+
+function mini {
+
+  PORT=$(curl -u grfnadministrator:goodgoodGRFN1 -s 'https://grfn-log.eu.ngrok.io/ngrok.log' | jq 'select(.name=="ssh-access").url' | cut -d':' -f3 | cut -d'"' -f1);
+
+  echo 'Accessing GRFN-MINI on port:' $PORT;
+
+ sshpass -p Gingerprice1 ssh grfnadministrator@0.tcp.eu.ngrok.io -p $PORT;
+}
+
+
 function cdl {
 	if [ "$1" = "-l" ]; then
 		\cd $2; ls
@@ -80,9 +98,6 @@ function cdl {
 		\cd $1
 	fi
 }
-
-### Google Apps Manager ###
-alias gam="python ~/Google\ Drive/Google\ Apps/gam/gam.py"
 
 export PATH=~/.npm-global/bin:$PATH
 npm config set prefix '~/.npm-global'
